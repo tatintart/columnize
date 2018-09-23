@@ -43,19 +43,15 @@ class Layout:
         :param words: list of words to format
         :returns: an iterator of formatted lines
         """
+        spacer = " " * self.spacing
+        word_count = len(words)
         for row_idx in range(self.row_count):
-            output = ''
-            for col_idx in range(self.col_count):
-                elt_idx = self.row_count * col_idx + row_idx
-                if elt_idx < len(words):
-                    if col_idx + 1 == self.col_count:
-                        output += words[elt_idx]
-                    else:
-                        width = self.col_widths[col_idx] + self.spacing
-                        output += words[elt_idx].ljust(width)
-                else:
-                    break
-            yield output.strip()
+            word_idxs = (self.row_count * col_idx + row_idx
+                         for col_idx in range(self.col_count))
+            row_words = (words[i] for i in word_idxs if i < word_count)
+            yield spacer.join(word.ljust(width)
+                              for (word, width)
+                              in zip(row_words, self.col_widths))
 
 
 def columnize(words, width=80, spacing=2):
