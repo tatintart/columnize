@@ -7,7 +7,6 @@ from .columnize import columnize
 def command():
     """
     Entry point for the command line.
-    Reads stdin and formats its tokens to fit in the terminal's width
     """
     args = parse_args()
     words = sum((l.split() for l in fileinput.input(args.input)), [])

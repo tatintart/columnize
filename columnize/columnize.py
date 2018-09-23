@@ -5,17 +5,19 @@ class Layout:
 
     """
     A layout defines how to represent a list of words.
-    It contains:
-    - a number of rows and columns
-    - the width for each column
-    - the spacing between each column
+
+    :attr col_count: the number of columns
+    :attr row_count: the number of rows
+    :attr col_widths: the width for each column
+    :attr full_width: the full width of the layout
+    :attr spacing: the spacing between each column
     """
 
     def __init__(self, elem_count, col_count, spacing):
         self.col_count = col_count
-        self.col_widths = [0] * col_count
-        self.full_width = 0
         self.row_count = math.ceil(elem_count / col_count)
+        self.col_widths = [0] * col_count
+        self.full_width = spacing * (col_count - 1)
         self.spacing = spacing
 
     def __str__(self):
@@ -24,20 +26,22 @@ class Layout:
     def adjust_width(self, elt_idx, elt_width):
         """
         Adjust the width of a column so that it can fit a word
-        Args:
-            elt_idx: index of the element
-            elt_width: width of the element
+
+        :param elt_idx: index of the element
+        :param elt_width: width of the element
         """
         elt_column = int(elt_idx / self.row_count)
-        current_width = self.col_widths[elt_column]
-        if elt_width > current_width:
+        width_increase = elt_width - self.col_widths[elt_column]
+        if width_increase > 0:
             self.col_widths[elt_column] = elt_width
-            self.full_width = sum(self.col_widths) \
-                + self.spacing * (self.col_count - 1)
+            self.full_width += width_increase
 
     def format(self, words):
         """
         Format a list of words according to this layout
+
+        :param words: list of words to format
+        :returns: an iterator of formatted lines
         """
         for row_idx in range(self.row_count):
             output = ''
@@ -55,9 +59,10 @@ class Layout:
 def columnize(words, width=80, spacing=2):
     """
     Format a list of words in columns
-    Args:
-        width: total width of the layout
-        spacing: minimum spacing between two columns
+
+    :param width: total width of the layout
+    :param spacing: minimum spacing between two columns
+    :returns: an iterator of formatted lines
     """
     avg_len = sum(len(s) for s in words) / len(words)
     max_col_count = min(len(words), int((width+spacing) / (avg_len+spacing)))
