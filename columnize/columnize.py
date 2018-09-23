@@ -72,16 +72,3 @@ def columnize(words, width=80, spacing=2):
         return layouts[-1].format(words)
     else:
         return words
-
-
-def command():
-    """
-    Entry point for the command line.
-    Reads stdin and formats its tokens to fit in the terminal's width
-    """
-    import fileinput
-    import shutil
-    words = sum((l.split() for l in fileinput.input()), [])
-    tty_columns = shutil.get_terminal_size().columns
-    for line in columnize(words, tty_columns):
-        print(line)

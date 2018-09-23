@@ -30,7 +30,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     entry_points={
         'console_scripts': [
-            'columnize=columnize.columnize:command',
+            'columnize=columnize:command',
         ],
     },
 )
