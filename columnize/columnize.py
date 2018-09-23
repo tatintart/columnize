@@ -21,7 +21,7 @@ class Layout:
         self.spacing = spacing
 
     def __str__(self):
-        return "Layout({0})".format(self.col_widths)
+        return "Layout({})".format(", ".join(str(w) for w in self.col_widths))
 
     def adjust_width(self, elt_idx, elt_width):
         """
@@ -53,6 +53,8 @@ class Layout:
                     else:
                         width = self.col_widths[col_idx] + self.spacing
                         output += words[elt_idx].ljust(width)
+                else:
+                    break
             yield output.strip()
 
 
@@ -73,6 +75,8 @@ def columnize(words, width=80, spacing=2):
             layout.adjust_width(elt_idx, elt_len)
             if layout.full_width > width:
                 layouts.remove(layout)
+        if not layouts:
+            break
     if layouts:
         return layouts[-1].format(words)
     else:
